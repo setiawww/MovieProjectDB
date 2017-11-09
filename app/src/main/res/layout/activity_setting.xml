@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dicoding.setiawww.movieprojectdb.SettingActivity">
+
+    <TextView
+        android:id="@+id/tvNotification"
+        style="@style/TextContent.Black"
+        android:layout_marginTop="16dp"
+        android:text="@string/notification"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDailyNotif"
+        style="@style/TextContent.Subtitle"
+        android:layout_marginTop="16dp"
+        android:text="@string/daily_reminder_notification"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNotification" />
+
+    <TextView
+        android:id="@+id/tvDailyControl"
+        style="@style/TextContent.Small"
+        android:layout_marginTop="16dp"
+        android:text="@string/turn_on_off_daily_reminder"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDailyNotif" />
+
+    <TextView
+        android:id="@+id/tvUpcomingNotif"
+        style="@style/TextContent.Subtitle"
+        android:layout_marginTop="16dp"
+        android:text="@string/upcoming_reminder_notification"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDailyControl" />
+
+    <TextView
+        android:id="@+id/tvUpcomingControl"
+        style="@style/TextContent.Small"
+        android:layout_marginTop="16dp"
+        android:text="@string/turn_on_off_upcoming_reminder"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvUpcomingNotif" />
+
+    <TextView
+        android:id="@+id/tvSetting"
+        style="@style/TextContent.Black"
+        android:layout_marginTop="32dp"
+        android:text="@string/action_settings"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvUpcomingControl" />
+
+    <TextView
+        android:id="@+id/tvLocale"
+        style="@style/TextContent.Subtitle"
+        android:layout_marginTop="16dp"
+        android:text="@string/setting_locale"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSetting" />
+
+    <TextView
+        android:id="@+id/tvSettingLocale"
+        style="@style/TextContent.Small"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:text="@string/change_your_phone_localization"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLocale" android:focusable="true"/>
+
+    <Switch
+        android:id="@+id/switchDaily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="8dp"
+        android:checked="true"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDailyNotif" />
+
+    <Switch
+        android:id="@+id/switchUpcoming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="8dp"
+        android:checked="true"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvUpcomingNotif" />
+
+</android.support.constraint.ConstraintLayout>

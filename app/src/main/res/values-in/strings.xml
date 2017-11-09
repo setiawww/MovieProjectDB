@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MovieProjectUiUx</string>
+
+    <string name="navigation_drawer_open">Buka navigation drawer</string>
+    <string name="navigation_drawer_close">Tutup navigation drawer</string>
+
+    <string name="action_settings">Pengaturan</string>
+    <string name="setiawww_yahoo_com">setiawww@yahoo.com</string>
+    <string name="movie_project_db">Movie Project Database</string>
+    <string name="now_showing">Sedang Tayang</string>
+    <string name="tools">Perkakas</string>
+    <string name="upcoming">Akan Datang</string>
+    <string name="movie_title">judul film</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="setting">Pengaturan</string>
+    <string name="change_your_phone_localization">Ubah Lokalisasi Perangkat</string>
+    <string name="daily_reminder_notification">Notifikasi Pengingat Harian</string>
+    <string name="notification">Notifikasi</string>
+    <string name="setting_locale">Pengaturan Lokal</string>
+    <string name="turn_on_off_daily_reminder">Nyalakan/matikan pengingat harian</string>
+    <string name="turn_on_off_upcoming_reminder">Nyalakan/matikan pengingat akan datang</string>
+    <string name="upcoming_reminder_notification">Notifikasi Pengingat Akan Datang</string>
+    <string name="detail">Detil</string>
+    <string name="judul">Judul</string>
+    <string name="share">Bagikan</string>
+    <string name="date">Tanggal</string>
+    <string name="overview">Paparan</string>
+    <string name="title">Judul</string>
+    <string name="now_playing">Sedang Tayang</string>
+    <string name="search">CARI</string>
+    <string name="favourite">Favorit</string>
+    <string name="added_to_favourite">Film ini ditambahkan ke daftar Favorit anda</string>
+    <string name="remove_from_favourite">Film ini dihapus dari daftar Favorit anda</string>
+
+
+</resources>

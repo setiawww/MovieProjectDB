@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    card_view:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/img_poster"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
+            android:layout_marginBottom="4dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/tv_judul"
+            style="@style/TextContent.Black"
+            android:layout_width="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="-2dp"
+            android:layout_toRightOf="@id/img_poster"
+            android:text="@string/title"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_overview"
+            style="@style/TextContent.Small"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_above="@+id/tv_tanggal"
+            android:layout_below="@id/tv_judul"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/img_poster"
+            android:scrollHorizontally="true"
+            android:text="@string/overview" />
+
+        <TextView
+            android:id="@+id/tv_tanggal"
+            style="@style/TextContent.Subtitle"
+            android:layout_above="@+id/linearLayout"
+            android:layout_marginBottom="8dp"
+            android:text="@string/date"
+            android:layout_toRightOf="@+id/img_poster"
+            android:layout_toEndOf="@+id/img_poster" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@id/img_poster"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_detail"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/detail"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_share"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/share"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
