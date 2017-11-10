@@ -1,8 +1,10 @@
 package com.dicoding.setiawww.movieprojectdb;
 
 import android.app.LoaderManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,8 +17,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dicoding.setiawww.movieprojectdb.db.FaveHelper;
+import com.dicoding.setiawww.movieprojectdb.entity.Favourite;
 import com.squareup.picasso.Picasso;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<DetailItems>> {
@@ -35,6 +40,19 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private Button buttonStar;
     private Boolean starFave = false;
 
+    public static String EXTRA_FAVE = "extra_fave";
+    public static String EXTRA_POSITION = "extra_position";
+
+    public static int REQUEST_ADD = 100;
+    public static int RESULT_ADD = 101;
+    public static int REQUEST_UPDATE = 200;
+    public static int RESULT_UPDATE = 201;
+    public static int RESULT_DELETE = 301;
+
+    private Favourite favourite;
+    private int position;
+    private FaveHelper faveHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,27 +69,63 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         buttonStar = findViewById(R.id.buttonStar);
         buttonStar.setVisibility(View.INVISIBLE);
 
+        Bundle movie = new Bundle();
+        movie.putString(MOVIE_ID_TO_SHOW, getIntent().getStringExtra(EXTRA_MOVIE_ID));
+        getLoaderManager().initLoader(1, movie, this);
+
+        faveHelper = new FaveHelper(this);
+        try {
+            faveHelper.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //favourite = getIntent().getParcelableExtra(EXTRA_FAVE);
+
+        //if (favourite != null){
+        //    position = getIntent().getIntExtra(EXTRA_POSITION, 0);
+        //}
+
         buttonStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(starFave){
+                    // remove from the favourite list
                     starFave = false;
                     buttonStar.setBackground(getResources().getDrawable(R.drawable.ic_star_off));
 
+                    //faveHelper.delete(favourite.getId());
+
+                    Intent intent = new Intent();
+                    intent.putExtra(EXTRA_POSITION, position);
+                    setResult(RESULT_DELETE, intent);
+                    //finish();
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.remove_from_favourite), Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    // add to the favourite list
                     starFave = true;
                     buttonStar.setBackground(getResources().getDrawable(R.drawable.ic_star_on));
+
+                    Favourite newFave = new Favourite();
+                    newFave.setIdmovie(movieID);
+                    newFave.setJudul(judul);
+                    newFave.setOverview(overview);
+                    newFave.setDate(tanggal);
+                    newFave.setPoster(poster);
+                    newFave.setStatus(status);
+
+                    //faveHelper.insert(newFave);
+
+                    //setResult(RESULT_ADD);
+                    //finish();
 
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.added_to_favourite), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        Bundle movie = new Bundle();
-        movie.putString(MOVIE_ID_TO_SHOW, getIntent().getStringExtra(EXTRA_MOVIE_ID));
-        getLoaderManager().initLoader(1, movie, this);
+
     }
 
 
@@ -112,7 +166,9 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if (faveHelper != null){
+            faveHelper.close();
+        }
         Log.d("DetailActivity: ", "onDestroy");
     }
 
