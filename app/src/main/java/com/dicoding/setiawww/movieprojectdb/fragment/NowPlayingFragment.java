@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class NowPlayingFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<Movie>> {
 
     private RecyclerView rvNowPlaying;
-    private ArrayList<Movie> list;
+    private CardViewMovieAdapter adapter;
 
     public NowPlayingFragment() {
         // Required empty public constructor
@@ -40,6 +40,9 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
 
         rvNowPlaying = nowPlayingView.findViewById(R.id.rv_nowplaying);
         rvNowPlaying.setHasFixedSize(true);
+
+        //adapter = new CardViewMovieAdapter(getActivity());                  //
+        adapter = new CardViewMovieAdapter(this, 0);                  //
 
         //getLoaderManager().restartLoader(0, null, );
         getLoaderManager().initLoader(0, null, this);
@@ -59,9 +62,8 @@ public class NowPlayingFragment extends Fragment implements LoaderManager.Loader
         Log.d("Load Finish","1");
 
         rvNowPlaying.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        CardViewMovieAdapter cardViewMovieAdapter = new CardViewMovieAdapter(getActivity().getApplicationContext());
-        cardViewMovieAdapter.setListMovie(movies);
-        rvNowPlaying.setAdapter(cardViewMovieAdapter);
+        adapter.setListMovie(movies);
+        rvNowPlaying.setAdapter(adapter);
     }
 
     @Override

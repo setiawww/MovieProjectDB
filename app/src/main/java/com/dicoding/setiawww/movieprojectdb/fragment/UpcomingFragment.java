@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class UpcomingFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<Movie>> {
 
     private RecyclerView rvUpcoming;
-    private ArrayList<Movie> list;
+    private CardViewMovieAdapter adapter;
 
     public UpcomingFragment() {
         // Required empty public constructor
@@ -40,6 +40,9 @@ public class UpcomingFragment extends Fragment implements LoaderManager.LoaderCa
 
         rvUpcoming = upcomingView.findViewById(R.id.rv_upcoming);
         rvUpcoming.setHasFixedSize(true);
+
+        //adapter = new CardViewMovieAdapter(getActivity());          //
+        adapter = new CardViewMovieAdapter(this, 1);          //
 
         //getLoaderManager().restartLoader(0, null, );
         getLoaderManager().initLoader(0, null, this);
@@ -60,9 +63,9 @@ public class UpcomingFragment extends Fragment implements LoaderManager.LoaderCa
         Log.d("Load Finish","2");
         //progressBarLoading.setVisibility(View.GONE);
         rvUpcoming.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        CardViewMovieAdapter cardViewMovieAdapter = new CardViewMovieAdapter(getActivity().getApplicationContext());
-        cardViewMovieAdapter.setListMovie(data);
-        rvUpcoming.setAdapter(cardViewMovieAdapter);
+        adapter.setListMovie(data);
+        rvUpcoming.setAdapter(adapter);
+
     }
 
     @Override

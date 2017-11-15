@@ -1,10 +1,8 @@
 package com.dicoding.setiawww.movieprojectdb;
 
 import android.app.LoaderManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +27,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private TextView tvJudul, tvDetail;
     private ImageView ivPoster;
     public static final String EXTRA_MOVIE_ID = "extra_movie_id";
-    private String movieID;
+    private String movieID, idMovie;
     private String judul;
     private String overview;
     private String tanggal;
@@ -42,15 +40,17 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     public static String EXTRA_FAVE = "extra_fave";
     public static String EXTRA_POSITION = "extra_position";
+    public static String EXTRA_TAB = "extra_tab";
 
+    public static int REQUEST_DETAIL = 900;
     public static int REQUEST_ADD = 100;
     public static int RESULT_ADD = 101;
     public static int REQUEST_UPDATE = 200;
     public static int RESULT_UPDATE = 201;
     public static int RESULT_DELETE = 301;
 
-    private Favourite favourite;
-    private int position;
+    private Favourite favourite, fave;
+    private int position, tabPosition;
     private FaveHelper faveHelper;
 
     @Override
@@ -70,8 +70,11 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         buttonStar.setVisibility(View.INVISIBLE);
 
         Bundle movie = new Bundle();
-        movie.putString(MOVIE_ID_TO_SHOW, getIntent().getStringExtra(EXTRA_MOVIE_ID));
+        idMovie = getIntent().getStringExtra(EXTRA_MOVIE_ID);
+        movie.putString(MOVIE_ID_TO_SHOW, idMovie);
         getLoaderManager().initLoader(1, movie, this);
+
+        tabPosition = getIntent().getIntExtra(EXTRA_TAB,0);
 
         faveHelper = new FaveHelper(this);
         try {
@@ -80,11 +83,23 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             e.printStackTrace();
         }
 
-        //favourite = getIntent().getParcelableExtra(EXTRA_FAVE);
+        favourite = getIntent().getParcelableExtra(EXTRA_FAVE);
 
-        //if (favourite != null){
-        //    position = getIntent().getIntExtra(EXTRA_POSITION, 0);
-        //}
+        if (favourite != null){
+            position = getIntent().getIntExtra(EXTRA_POSITION, 0);
+        }
+
+        // Cari data movie di favourite database
+        ArrayList<Favourite> favourites = faveHelper.getDataByMovieID(idMovie);
+
+        //faveHelper.close();
+
+        if(favourites.size() != 0)
+        {
+            Log.d("Detail Movie: ", "Found in Favourite database!");
+            starFave = true;
+            fave = favourites.get(0);
+        }
 
         buttonStar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,12 +110,14 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                     buttonStar.setBackground(getResources().getDrawable(R.drawable.ic_star_off));
 
                     //faveHelper.delete(favourite.getId());
+                    faveHelper.delete(fave.getId());
 
-                    Intent intent = new Intent();
-                    intent.putExtra(EXTRA_POSITION, position);
-                    setResult(RESULT_DELETE, intent);
+                    //Intent intent = new Intent();
+                    //intent.putExtra(EXTRA_POSITION, position);
+                    //setResult(RESULT_DELETE, intent);
                     //finish();
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.remove_from_favourite), Toast.LENGTH_SHORT).show();
+
                 }
                 else {
                     // add to the favourite list
@@ -115,7 +132,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                     newFave.setPoster(poster);
                     newFave.setStatus(status);
 
-                    //faveHelper.insert(newFave);
+                    faveHelper.insert(newFave);
 
                     //setResult(RESULT_ADD);
                     //finish();
@@ -145,6 +162,12 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         progressBarDetail.setVisibility(View.GONE);
 
         buttonStar.setVisibility(View.VISIBLE);
+        if(starFave){
+            buttonStar.setBackground(getResources().getDrawable(R.drawable.ic_star_on));
+        }
+        else {
+            buttonStar.setBackground(getResources().getDrawable(R.drawable.ic_star_off));
+        }
 
         judul = data.get(0).getJudul();
         overview = data.get(0).getDetail();
@@ -206,5 +229,21 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         sendIntent.putExtra(Intent.EXTRA_TITLE, "Movie Info");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
+    }
+
+    public void onBackPressed() {
+        if(starFave){
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_TAB, tabPosition);
+            setResult(RESULT_ADD, intent);
+        }
+        else{
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_POSITION, position);
+            intent.putExtra(EXTRA_TAB, tabPosition);
+            setResult(RESULT_DELETE, intent);
+        }
+        finish();
+        super.onBackPressed();
     }
 }

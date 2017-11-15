@@ -40,11 +40,12 @@
             android:id="@+id/tv_overview"
             style="@style/TextContent.Small"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="64dp"
             android:layout_above="@+id/tv_tanggal"
             android:layout_below="@id/tv_judul"
             android:layout_marginBottom="8dp"
             android:layout_toRightOf="@id/img_poster"
+            android:paddingTop="6dp"
             android:scrollHorizontally="true"
             android:text="@string/overview" />
 

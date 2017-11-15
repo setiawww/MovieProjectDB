@@ -1,6 +1,7 @@
 package com.dicoding.setiawww.movieprojectdb.fragment;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dicoding.setiawww.movieprojectdb.Movie;
+import com.dicoding.setiawww.movieprojectdb.DetailActivity;
 import com.dicoding.setiawww.movieprojectdb.R;
 import com.dicoding.setiawww.movieprojectdb.adapter.FaveAdapter;
 import com.dicoding.setiawww.movieprojectdb.db.FaveHelper;
@@ -27,8 +28,6 @@ import java.util.LinkedList;
 public class FavouriteFragment extends Fragment {
 
     private RecyclerView rvFavourite;
-    //private ArrayList<Movie> list;
-
     private LinkedList<Favourite> list;
     private FaveAdapter adapter;
     private FaveHelper faveHelper;
@@ -42,15 +41,11 @@ public class FavouriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_favourite, container, false);
         final View favouriteView = inflater.inflate(R.layout.fragment_favourite,container,false);
 
         rvFavourite = favouriteView.findViewById(R.id.rv_favourite);
         rvFavourite.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         rvFavourite.setHasFixedSize(true);
-
-        //getLoaderManager().restartLoader(0, null, );
-        //getLoaderManager().initLoader(0, null, this);
 
         faveHelper = new FaveHelper(getActivity().getApplicationContext());
         try {
@@ -61,7 +56,9 @@ public class FavouriteFragment extends Fragment {
 
         list = new LinkedList<>();
 
-        adapter = new FaveAdapter(getActivity());
+        //adapter = new FaveAdapter(getActivity());
+        adapter = new FaveAdapter(this);
+
         adapter.setListFaves(list);
         rvFavourite.setAdapter(adapter);
 
@@ -109,4 +106,21 @@ public class FavouriteFragment extends Fragment {
             faveHelper.close();
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == DetailActivity.REQUEST_DETAIL){
+            if(resultCode == DetailActivity.RESULT_ADD){
+                new LoadFaveAsync().execute();
+            }
+            else if(resultCode == DetailActivity.RESULT_DELETE){
+                int position = data.getIntExtra(DetailActivity.EXTRA_POSITION, 0);
+                list.remove(position);
+                adapter.setListFaves(list);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
 }

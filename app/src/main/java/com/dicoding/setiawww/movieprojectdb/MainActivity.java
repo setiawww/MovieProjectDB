@@ -51,6 +51,26 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //inisialisasi tab dan pager
+        View main_content = findViewById(R.id.app_bar_main_layout).findViewById(R.id.content_main_layout);
+
+        pager = main_content.findViewById(R.id.pager);
+        tabs = main_content.findViewById(R.id.tabs);
+        adapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), this);
+
+        //set object adapter kedalam ViewPager
+        pager.setAdapter(adapter);
+
+        //Manipulasi sedikit untuk set TextColor pada Tab
+        tabs.setTabTextColors(getResources().getColor(R.color.colorPrimaryDark),
+                getResources().getColor(android.R.color.white));
+
+        //set tab ke ViewPager
+        tabs.setupWithViewPager(pager);
+
+        //konfigurasi Gravity Fill untuk Tab berada di posisi yang proposional
+        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +101,8 @@ public class MainActivity extends AppCompatActivity
 
                             Bundle bundle = new Bundle();
                             bundle.putString(searchFragment.TITLE_TO_SEARCH, String.valueOf(movie_title.getText()));
+                            int activeTab = pager.getCurrentItem();                 //
+                            bundle.putInt(searchFragment.ACTIVE_TAB, activeTab);    //
                             searchFragment.setArguments(bundle);
                             fragmentTransaction.replace(R.id.app_bar_main_layout, searchFragment, SearchFragment.class.getSimpleName());
                             fragmentTransaction.addToBackStack(null);
@@ -103,26 +125,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        //inisialisasi tab dan pager
-        View main_content = findViewById(R.id.app_bar_main_layout).findViewById(R.id.content_main_layout);
-
-        pager = main_content.findViewById(R.id.pager);
-        tabs = main_content.findViewById(R.id.tabs);
-        adapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), this);
-
-        //set object adapter kedalam ViewPager
-        pager.setAdapter(adapter);
-
-        //Manipulasi sedikit untuk set TextColor pada Tab
-        tabs.setTabTextColors(getResources().getColor(R.color.colorPrimaryDark),
-                getResources().getColor(android.R.color.white));
-
-        //set tab ke ViewPager
-        tabs.setupWithViewPager(pager);
-
-        //konfigurasi Gravity Fill untuk Tab berada di posisi yang proposional
-        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // set reminder
         alarmReceiver = new AlarmReceiver();
@@ -235,6 +237,25 @@ public class MainActivity extends AppCompatActivity
                 upcoming_notif_setting = data.getBooleanExtra(SettingActivity.EXTRA_UPCOMING_SETTING, true);
             }
         }
+
+        else if(requestCode == DetailActivity.REQUEST_DETAIL){
+
+            pager.setAdapter(adapter);                                                              // to refresh favourite fragment
+            int tabPosition = data.getIntExtra(DetailActivity.EXTRA_TAB, 0);
+            pager.setCurrentItem(tabPosition);                                                      // get back to the last active tab
+
+            if(resultCode == DetailActivity.RESULT_ADD){
+
+
+            }
+            else if(resultCode == DetailActivity.RESULT_DELETE){
+
+                int position = data.getIntExtra(DetailActivity.EXTRA_POSITION, 0);
+
+            }
+
+        }
+
     }
 
     @Override

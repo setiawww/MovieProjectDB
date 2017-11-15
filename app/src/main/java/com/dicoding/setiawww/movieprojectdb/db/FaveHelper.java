@@ -71,6 +71,32 @@ public class FaveHelper {
         return arrayList;
     }
 
+    public ArrayList<Favourite> getDataByMovieID(String movieID){
+        String result = "";
+        Cursor cursor = database.query(DATABASE_TABLE,null,IDMOVIE+" LIKE ?",new String[]{movieID},null,null,_ID + " ASC",null);
+        cursor.moveToFirst();
+        ArrayList<Favourite> arrayList = new ArrayList<>();
+        Favourite favourite;
+        if (cursor.getCount()>0) {
+            do {
+                favourite = new Favourite();
+                favourite.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
+                favourite.setIdmovie(cursor.getString(cursor.getColumnIndexOrThrow(IDMOVIE)));
+                favourite.setJudul(cursor.getString(cursor.getColumnIndexOrThrow(JUDUL)));
+                favourite.setOverview(cursor.getString(cursor.getColumnIndexOrThrow(OVERVIEW)));
+                favourite.setDate(cursor.getString(cursor.getColumnIndexOrThrow(DATE)));
+                favourite.setPoster(cursor.getString(cursor.getColumnIndexOrThrow(POSTER)));
+                favourite.setStatus(cursor.getString(cursor.getColumnIndexOrThrow(STATUS)));
+
+                arrayList.add(favourite);
+                cursor.moveToNext();
+
+            } while (!cursor.isAfterLast());
+        }
+        cursor.close();
+        return arrayList;
+    }
+
     public long insert(Favourite favourite){
         ContentValues initialValues =  new ContentValues();
         initialValues.put(IDMOVIE, favourite.getIdmovie());

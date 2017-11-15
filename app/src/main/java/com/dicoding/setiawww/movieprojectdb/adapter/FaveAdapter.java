@@ -1,6 +1,5 @@
 package com.dicoding.setiawww.movieprojectdb.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +15,7 @@ import com.dicoding.setiawww.movieprojectdb.CustomOnItemClickListener;
 import com.dicoding.setiawww.movieprojectdb.DetailActivity;
 import com.dicoding.setiawww.movieprojectdb.R;
 import com.dicoding.setiawww.movieprojectdb.entity.Favourite;
+import com.dicoding.setiawww.movieprojectdb.fragment.FavouriteFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -26,11 +26,16 @@ import java.util.LinkedList;
 
 public class FaveAdapter extends RecyclerView.Adapter<FaveAdapter.FaveViewholder>{
     private LinkedList<Favourite> listFaves;
-    private Activity activity;
     private Context context;
+    private FavouriteFragment favouriteFragment;
 
-    public FaveAdapter(Activity activity) {
-        this.activity = activity;
+    //public FaveAdapter(Context context) {
+    //    this.context = context;
+    //}
+
+    public FaveAdapter(FavouriteFragment fragment){
+        this.context = fragment.getContext();
+        favouriteFragment = fragment;
     }
 
     public LinkedList<Favourite> getListFaves() {
@@ -44,6 +49,7 @@ public class FaveAdapter extends RecyclerView.Adapter<FaveAdapter.FaveViewholder
     @Override
     public FaveViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cardview_movie, parent, false);
+
         return new FaveViewholder(view);
     }
 
@@ -67,9 +73,12 @@ public class FaveAdapter extends RecyclerView.Adapter<FaveAdapter.FaveViewholder
                 Log.d("Detail MovieID: ", getListFaves().get(position).getIdmovie());
 
                 Intent detailIntent = new Intent(context, DetailActivity.class);
+                detailIntent.putExtra(DetailActivity.EXTRA_POSITION, position);
+                detailIntent.putExtra(DetailActivity.EXTRA_FAVE, getListFaves().get(position));
                 detailIntent.putExtra(DetailActivity.EXTRA_MOVIE_ID, getListFaves().get(position).getIdmovie());
-                detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(detailIntent);
+                //detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //context.startActivity(detailIntent);
+                favouriteFragment.startActivityForResult(detailIntent, DetailActivity.REQUEST_DETAIL);
             }
         }));
 

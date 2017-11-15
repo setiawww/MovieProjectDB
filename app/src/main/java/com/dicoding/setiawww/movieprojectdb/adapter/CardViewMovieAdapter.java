@@ -2,6 +2,7 @@ package com.dicoding.setiawww.movieprojectdb.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.dicoding.setiawww.movieprojectdb.CustomOnItemClickListener;
 import com.dicoding.setiawww.movieprojectdb.DetailActivity;
+import com.dicoding.setiawww.movieprojectdb.MainActivity;
 import com.dicoding.setiawww.movieprojectdb.Movie;
 import com.dicoding.setiawww.movieprojectdb.R;
 import com.squareup.picasso.Picasso;
@@ -29,9 +31,17 @@ import java.util.ArrayList;
 public class CardViewMovieAdapter extends RecyclerView.Adapter<CardViewMovieAdapter.CardViewViewHolder>{
     private ArrayList<Movie> listMovie;
     private Context context;
+    private android.support.v4.app.Fragment fragmentOrigin;
+    private int tabOrigin;
 
-    public CardViewMovieAdapter(Context context) {
-        this.context = context;
+    //public CardViewMovieAdapter(Context context) {
+    //    this.context = context;
+    //}
+
+    public CardViewMovieAdapter(Fragment fragment, int tabPosition) {
+        this.context = fragment.getContext();
+        fragmentOrigin = fragment;
+        tabOrigin = tabPosition;
     }
 
     public ArrayList<Movie> getListMovie() {
@@ -72,8 +82,11 @@ public class CardViewMovieAdapter extends RecyclerView.Adapter<CardViewMovieAdap
 
                 Intent detailIntent = new Intent(context, DetailActivity.class);
                 detailIntent.putExtra(DetailActivity.EXTRA_MOVIE_ID, getListMovie().get(position).getId());
-                detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(detailIntent);
+                detailIntent.putExtra(DetailActivity.EXTRA_TAB, tabOrigin);
+                //detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //context.startActivity(detailIntent);
+                ((MainActivity)context).startActivityForResult(detailIntent, DetailActivity.REQUEST_DETAIL);
+                //fragmentOrigin.startActivityForResult(detailIntent, DetailActivity.REQUEST_DETAIL);
             }
         }));
 

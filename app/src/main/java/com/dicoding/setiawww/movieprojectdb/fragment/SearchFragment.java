@@ -16,12 +16,15 @@ import android.widget.ProgressBar;
 
 import com.dicoding.setiawww.movieprojectdb.DetailActivity;
 import com.dicoding.setiawww.movieprojectdb.ItemClickSupport;
+import com.dicoding.setiawww.movieprojectdb.MainActivity;
 import com.dicoding.setiawww.movieprojectdb.Movie;
 import com.dicoding.setiawww.movieprojectdb.MovieAsyncTaskLoader;
 import com.dicoding.setiawww.movieprojectdb.R;
 import com.dicoding.setiawww.movieprojectdb.adapter.ListMovieAdapter;
 
 import java.util.ArrayList;
+
+import javax.crypto.spec.DESedeKeySpec;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +34,9 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     private RecyclerView rvSearch;
     private String title, judul;
     public final String TITLE_TO_SEARCH = "title_to_search";
+    public final String ACTIVE_TAB = "active_tab";
     private ProgressBar progressBarSearch;
+    private int activeTab;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -48,6 +53,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         rvSearch.setHasFixedSize(true);
 
         title = getArguments().getString(TITLE_TO_SEARCH);
+        activeTab = getArguments().getInt(ACTIVE_TAB);                              //
 
         progressBarSearch = searchView.findViewById(R.id.progressBarSearch);
 
@@ -99,7 +105,9 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
 
                 Intent detailIntent = new Intent(getContext(), DetailActivity.class);
                 detailIntent.putExtra(DetailActivity.EXTRA_MOVIE_ID, movieID);
-                startActivity(detailIntent);
+                detailIntent.putExtra(DetailActivity.EXTRA_TAB, activeTab);                                             //
+                //startActivity(detailIntent);
+                ((MainActivity)getContext()).startActivityForResult(detailIntent, DetailActivity.REQUEST_DETAIL);       //
             }
         });
     }
