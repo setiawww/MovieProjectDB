@@ -1,8 +1,11 @@
 package com.dicoding.setiawww.movieprojectdb;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,14 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.CONTENT_URI;
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.FaveColumns.DATE;
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.FaveColumns.IDMOVIE;
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.FaveColumns.JUDUL;
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.FaveColumns.OVERVIEW;
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.FaveColumns.POSTER;
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.FaveColumns.STATUS;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<DetailItems>> {
 
@@ -52,6 +63,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private Favourite favourite, fave;
     private int position, tabPosition;
     private FaveHelper faveHelper;
+    private Uri uri;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +87,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         movie.putString(MOVIE_ID_TO_SHOW, idMovie);
         getLoaderManager().initLoader(1, movie, this);
 
-        tabPosition = getIntent().getIntExtra(EXTRA_TAB,0);
+        tabPosition = getIntent().getIntExtra(EXTRA_TAB,0);                             // from NowPlaying, Upcoming, Search
 
         faveHelper = new FaveHelper(this);
         try {
@@ -83,23 +96,52 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             e.printStackTrace();
         }
 
-        favourite = getIntent().getParcelableExtra(EXTRA_FAVE);
+        //favourite = getIntent().getParcelableExtra(EXTRA_FAVE);
 
-        if (favourite != null){
-            position = getIntent().getIntExtra(EXTRA_POSITION, 0);
+        //if (favourite != null){
+        //    position = getIntent().getIntExtra(EXTRA_POSITION, 0);
+        //}
+
+        uri = getIntent().getData();                                                                // only from FavouriteFragment
+
+        if (uri != null) {
+            cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null){
+                if(cursor.moveToFirst()) {
+                    favourite = new Favourite(cursor);
+                }
+                cursor.close();
+            }
+        }
+        else {                                                                                      // from NowPlaying, Upcoming, Search
+            //uri = Uri.parse(CONTENT_URI+"/"+idMovie);
+            uri = Uri.parse(CONTENT_URI+"/"+IDMOVIE+"/"+idMovie);
+            cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null){
+                if(cursor.moveToFirst()) {
+                    favourite = new Favourite(cursor);
+                }
+                cursor.close();
+            }
+        }
+
+        if(favourite != null)
+        {
+            Log.d("Detail Movie: ", "Movie found in Favourite database!");
+            starFave = true;
         }
 
         // Cari data movie di favourite database
-        ArrayList<Favourite> favourites = faveHelper.getDataByMovieID(idMovie);
+        //ArrayList<Favourite> favourites = faveHelper.getDataByMovieID(idMovie);
 
-        //faveHelper.close();
+        ////faveHelper.close();
 
-        if(favourites.size() != 0)
-        {
-            Log.d("Detail Movie: ", "Found in Favourite database!");
-            starFave = true;
-            fave = favourites.get(0);
-        }
+        //if(favourites.size() != 0)
+        //{
+        //    Log.d("Detail Movie: ", "Found in Favourite database!");
+        //    starFave = true;
+        //    fave = favourites.get(0);
+        //}
 
         buttonStar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,12 +152,15 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                     buttonStar.setBackground(getResources().getDrawable(R.drawable.ic_star_off));
 
                     //faveHelper.delete(favourite.getId());
-                    faveHelper.delete(fave.getId());
+                    //faveHelper.delete(fave.getId());
 
                     //Intent intent = new Intent();
                     //intent.putExtra(EXTRA_POSITION, position);
                     //setResult(RESULT_DELETE, intent);
                     //finish();
+
+                    getContentResolver().delete(uri, null, null);
+
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.remove_from_favourite), Toast.LENGTH_SHORT).show();
 
                 }
@@ -124,18 +169,29 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
                     starFave = true;
                     buttonStar.setBackground(getResources().getDrawable(R.drawable.ic_star_on));
 
-                    Favourite newFave = new Favourite();
-                    newFave.setIdmovie(movieID);
-                    newFave.setJudul(judul);
-                    newFave.setOverview(overview);
-                    newFave.setDate(tanggal);
-                    newFave.setPoster(poster);
-                    newFave.setStatus(status);
+                    //Favourite newFave = new Favourite();
+                    //newFave.setIdmovie(movieID);
+                    //newFave.setJudul(judul);
+                    //newFave.setOverview(overview);
+                    //newFave.setDate(tanggal);
+                    //newFave.setPoster(poster);
+                    //newFave.setStatus(status);
 
-                    faveHelper.insert(newFave);
+                    //faveHelper.insert(newFave);
 
                     //setResult(RESULT_ADD);
                     //finish();
+
+                    // Gunakan contentvalues untuk menampung data
+                    ContentValues values = new ContentValues();
+                    values.put(IDMOVIE, movieID);
+                    values.put(JUDUL,judul);
+                    values.put(OVERVIEW,overview);
+                    values.put(DATE, tanggal);
+                    values.put(POSTER, poster);
+                    values.put(STATUS, status);
+
+                    getContentResolver().insert(CONTENT_URI,values);
 
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.added_to_favourite), Toast.LENGTH_SHORT).show();
                 }

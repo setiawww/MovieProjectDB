@@ -2,6 +2,8 @@ package com.dicoding.setiawww.movieprojectdb.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,14 +22,17 @@ import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.CONTENT_URI;
+
 /**
  * Created by setiawww on 10/11/2017.
  */
 
 public class FaveAdapter extends RecyclerView.Adapter<FaveAdapter.FaveViewholder>{
-    private LinkedList<Favourite> listFaves;
+    //private LinkedList<Favourite> listFaves;
     private Context context;
     private FavouriteFragment favouriteFragment;
+    private Cursor listFaves;
 
     //public FaveAdapter(Context context) {
     //    this.context = context;
@@ -37,12 +42,16 @@ public class FaveAdapter extends RecyclerView.Adapter<FaveAdapter.FaveViewholder
         this.context = fragment.getContext();
         favouriteFragment = fragment;
     }
-
+/*
     public LinkedList<Favourite> getListFaves() {
         return listFaves;
     }
 
     public void setListFaves(LinkedList<Favourite> listFaves) {
+        this.listFaves = listFaves;
+    }
+*/
+    public void setListFaves(Cursor listFaves) {
         this.listFaves = listFaves;
     }
 
@@ -59,7 +68,7 @@ public class FaveAdapter extends RecyclerView.Adapter<FaveAdapter.FaveViewholder
         //        .load("http://image.tmdb.org/t/p/w342"+getListFaves().get(position).getPoster())
         //        .override(350, 550)
         //        .into(holder.imgPoster);
-
+/*
         Picasso.with(context).load("http://image.tmdb.org/t/p/w342"+(getListFaves().get(position).getPoster())).into(holder.imgPoster);
 
         holder.tvJudul.setText(getListFaves().get(position).getJudul());
@@ -97,11 +106,59 @@ public class FaveAdapter extends RecyclerView.Adapter<FaveAdapter.FaveViewholder
                 context.startActivity(sendIntent);
             }
         }));
+*/
+        final Favourite favourite = getItem(position);
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w342"+(favourite.getPoster())).into(holder.imgPoster);
+        holder.tvJudul.setText(favourite.getJudul());
+        holder.tvOverview.setText(favourite.getOverview());
+        holder.tvTanggal.setText(favourite.getDate());
+
+        holder.btnDetail.setOnClickListener(new CustomOnItemClickListener(position, new CustomOnItemClickListener.OnItemClickCallback() {
+            @Override
+            public void onItemClicked(View view, int position) {
+                Log.d("Detail MovieID: ", favourite.getIdmovie());
+
+                Intent detailIntent = new Intent(context, DetailActivity.class);
+                Uri uri = Uri.parse(CONTENT_URI+"/"+favourite.getId());
+                detailIntent.setData(uri);
+                detailIntent.putExtra(DetailActivity.EXTRA_POSITION, position);
+                detailIntent.putExtra(DetailActivity.EXTRA_FAVE, favourite);
+                detailIntent.putExtra(DetailActivity.EXTRA_MOVIE_ID, favourite.getIdmovie());
+                favouriteFragment.startActivityForResult(detailIntent, DetailActivity.REQUEST_DETAIL);
+            }
+        }));
+
+        holder.btnShare.setOnClickListener(new CustomOnItemClickListener(position, new CustomOnItemClickListener.OnItemClickCallback() {
+            @Override
+            public void onItemClicked(View view, int position) {
+                Log.d("Share : ", favourite.getJudul());
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, favourite.getJudul() + "\n" + favourite.getOverview());
+                sendIntent.putExtra(Intent.EXTRA_TITLE, "Movie Info");
+                sendIntent.setType("text/plain");
+                sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(sendIntent);
+            }
+        }));
     }
 
     @Override
+    //public int getItemCount() {
+    //    return getListFaves().size();
+    //}
+
     public int getItemCount() {
-        return getListFaves().size();
+        if (listFaves == null) return 0;
+        return listFaves.getCount();
+    }
+
+    private Favourite getItem(int position){
+        if (!listFaves.moveToPosition(position)) {
+            throw new IllegalStateException("Position invalid");
+        }
+        return new Favourite(listFaves);
     }
 
     public class FaveViewholder extends RecyclerView.ViewHolder{

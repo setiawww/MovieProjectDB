@@ -1,5 +1,7 @@
 package com.dicoding.setiawww.movieprojectdb.db;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -8,20 +10,39 @@ import android.provider.BaseColumns;
 
 public class DatabaseContract {
 
-    static String TABLE_FAVOURITE = "fave";
+    public static String TABLE_FAVOURITE = "fave";
 
-    static final class FaveColumns implements BaseColumns {
+    public static final class FaveColumns implements BaseColumns {
         //Fave movie id
-        static String IDMOVIE = "idmovie";
+        public static String IDMOVIE = "idmovie";
         //Fave judul
-        static String JUDUL = "judul";
+        public static String JUDUL = "judul";
         //Fave detail
-        static String OVERVIEW = "overview";
+        public static String OVERVIEW = "overview";
         //Fave date
-        static String DATE = "date";
+        public static String DATE = "date";
         //Fave poster
-        static String POSTER = "poster";
+        public static String POSTER = "poster";
         //Fave status
-        static String STATUS = "status";
+        public static String STATUS = "status";
+    }
+
+    public static final String AUTHORITY = "com.dicoding.setiawww.movieprojectdb";
+
+    public static final Uri CONTENT_URI = new Uri.Builder().scheme("content")
+            .authority(AUTHORITY)
+            .appendPath(TABLE_FAVOURITE)
+            .build();
+
+    public static String getColumnString(Cursor cursor, String columnName) {
+        return cursor.getString( cursor.getColumnIndex(columnName) );
+    }
+
+    public static int getColumnInt(Cursor cursor, String columnName) {
+        return cursor.getInt( cursor.getColumnIndex(columnName) );
+    }
+
+    public static long getColumnLong(Cursor cursor, String columnName) {
+        return cursor.getLong( cursor.getColumnIndex(columnName) );
     }
 }

@@ -1,7 +1,14 @@
 package com.dicoding.setiawww.movieprojectdb.entity;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.dicoding.setiawww.movieprojectdb.db.DatabaseContract;
+
+import static android.provider.BaseColumns._ID;
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.getColumnInt;
+import static com.dicoding.setiawww.movieprojectdb.db.DatabaseContract.getColumnString;
 
 /**
  * Created by setiawww on 10/11/2017.
@@ -90,6 +97,16 @@ public class Favourite implements Parcelable {
     }
 
     public Favourite() {
+    }
+
+    public Favourite(Cursor cursor){
+        this.id = getColumnInt(cursor, _ID);
+        this.idmovie = getColumnString(cursor, DatabaseContract.FaveColumns.IDMOVIE);
+        this.judul = getColumnString(cursor, DatabaseContract.FaveColumns.JUDUL);
+        this.overview = getColumnString(cursor, DatabaseContract.FaveColumns.OVERVIEW);
+        this.date = getColumnString(cursor, DatabaseContract.FaveColumns.DATE);
+        this.poster = getColumnString(cursor, DatabaseContract.FaveColumns.POSTER);
+        this.status = getColumnString(cursor, DatabaseContract.FaveColumns.STATUS);
     }
 
     protected Favourite(Parcel in) {

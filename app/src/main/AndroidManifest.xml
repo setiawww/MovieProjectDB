@@ -51,6 +51,13 @@
         </activity>
 
         <activity android:name=".SettingActivity"></activity>
+
+        <provider
+            android:authorities="com.dicoding.setiawww.movieprojectdb"
+            android:name=".provider.FaveProvider"
+            android:exported="true"
+            android:readPermission="com.dicoding.setiawww.movieprojectdb.READ_DATABASE"
+            android:writePermission="com.dicoding.setiawww.movieprojectdb.WRITE_DATABASE" />
     </application>
 
 </manifest>

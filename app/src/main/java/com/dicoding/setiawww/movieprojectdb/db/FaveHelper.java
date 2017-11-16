@@ -122,4 +122,52 @@ public class FaveHelper {
     public int delete(int id){
         return database.delete(TABLE_FAVOURITE, _ID + " = '"+id+"'", null);
     }
+
+    public Cursor queryByIdProvider(String id){
+        return database.query(DATABASE_TABLE
+                ,null
+                ,_ID + " = ?"
+                ,new String[]{id}
+                ,null
+                ,null
+                ,null
+                ,null);
+    }
+
+    public Cursor queryProvider(){
+        return database.query(DATABASE_TABLE
+                ,null
+                ,null
+                ,null
+                ,null
+                ,null
+                ,_ID + " ASC");
+    }
+
+    public Cursor queryByIdMovieProvider(String idmovie){
+        return database.query(DATABASE_TABLE
+                ,null
+                ,IDMOVIE + " = ?"
+                ,new String[]{idmovie}
+                ,null
+                ,null
+                ,null
+                ,null);
+    }
+
+    public long insertProvider(ContentValues values){
+        return database.insert(DATABASE_TABLE,null,values);
+    }
+
+    public int updateProvider(String id,ContentValues values){
+        return database.update(DATABASE_TABLE,values,_ID +" = ?",new String[]{id} );
+    }
+
+    public int deleteProvider(String id){
+        return database.delete(DATABASE_TABLE,_ID + " = ?", new String[]{id});
+    }
+
+    public int deleteProvider2(String idmovie){
+        return database.delete(DATABASE_TABLE,IDMOVIE + " = ?", new String[]{idmovie});
+    }
 }
