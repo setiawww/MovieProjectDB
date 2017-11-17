@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">MyFavouriteMovie</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="setiawww_yahoo_com">setiawww@yahoo.com</string>
+    <string name="movie_project_db">Movie Project Database</string>
+    <string name="now_showing">Now Showing</string>
+    <string name="tools">Tools</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="movie_title">movie title</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="setting">Setting</string>
+    <string name="change_your_phone_localization">Change your phone localization</string>
+    <string name="daily_reminder_notification">Daily Reminder Notification</string>
+    <string name="notification">Notification</string>
+    <string name="setting_locale">Setting Locale</string>
+    <string name="turn_on_off_daily_reminder">Turn on/off daily reminder</string>
+    <string name="turn_on_off_upcoming_reminder">Turn on/off upcoming reminder</string>
+    <string name="upcoming_reminder_notification">Upcoming Reminder Notification</string>
+    <string name="detail">Detail</string>
+    <string name="judul">Judul</string>
+    <string name="share">Share</string>
+    <string name="date">Date</string>
+    <string name="overview">Overview</string>
+    <string name="title">Title</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="search">SEARCH</string>
+    <string name="favourite">Favourite</string>
+    <string name="added_to_favourite">This movie is added to your Favourite list</string>
+    <string name="remove_from_favourite">This movie is removed from your Favourite list</string>
+
+</resources>
